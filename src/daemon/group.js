@@ -314,8 +314,9 @@ class Group extends EventEmitter {
 
     if (item.start) {
       // Set target
-      item.target = `http://localhost:${item.env.PORT}`
-
+      item.target = item.env.HOST
+        ? `http://${item.env.HOST}:${item.env.PORT}`
+        : `http://127.0.0.1:${item.env.PORT}`
       // If server stops, no need to wait for timeout
       item.once('stop', send)
 
@@ -353,13 +354,15 @@ class Group extends EventEmitter {
 
     if (item.start) {
       // Set target
-      item.target = `http://${req.hostname}:${item.env.PORT}`
+      item.target = item.env.HOST
+        ? `http://${item.env.HOST}:${item.env.PORT}`
+        : `http://${req.hostname}:${item.env.PORT}`
 
       // If server stops, no need to wait for timeout
       item.once('stop', send)
 
       // When PORT is open, redirect
-      serverReady(item.env.PORT, send)
+      serverReady(item.env.PORT, item.env.HOST, send)
     } else {
       // Send immediatly if item is not a server started by a command
       send()
@@ -385,7 +388,9 @@ class Group extends EventEmitter {
         if (port && port !== '80') {
           target = `ws://127.0.0.1:${port}`
         } else if (item.start) {
-          target = `ws://127.0.0.1:${item.env.PORT}`
+          target = item.env.HOST
+            ? `ws://${item.env.HOST}:${item.env.PORT}`
+            : `ws://127.0.0.1:${item.env.PORT}`
         } else {
           const { hostname } = url.parse(item.target)
           target = `ws://${hostname}`
@@ -418,12 +423,13 @@ class Group extends EventEmitter {
 
       if (item) {
         if (port && port !== '80') {
-          log(`Connect - ${host} → ${port}`)
-          tcpProxy.proxy(socket, port)
+          const { HOST } = item.env
+          util.log(`Connect - proxy socket to ${port}`)
+          tcpProxy.proxy(socket, port, HOST || '127.0.0.1')
         } else if (item.start) {
-          const { PORT } = item.env
-          log(`Connect - ${host} → ${PORT}`)
-          tcpProxy.proxy(socket, PORT)
+          const { PORT, HOST } = item.env
+          util.log(`Connect - proxy socket to ${PORT}`)
+          tcpProxy.proxy(socket, PORT, HOST || '127.0.0.1')
         } else {
           const { hostname, port } = url.parse(item.target)
           const targetPort = port || 80

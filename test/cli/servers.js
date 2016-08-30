@@ -47,6 +47,7 @@ test('add should support options', t => {
   const cmd = 'node index.js'
   const name = 'project'
   const port = 3000
+  const host = '127.0.0.1'
   const out = '/some/path/out.log'
   const env = ['FOO', 'BAR']
 
@@ -59,6 +60,7 @@ test('add should support options', t => {
     name,
     '-p',
     port,
+    '-H', host,
     '-o',
     out,
     '-e',
@@ -79,7 +81,8 @@ test('add should support options', t => {
       PATH: process.env.PATH,
       FOO: process.env.FOO,
       BAR: process.env.BAR,
-      PORT: port
+      PORT: port,
+      HOST: host
     },
     xfwd: true,
     changeOrigin: true,
