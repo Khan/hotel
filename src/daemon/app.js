@@ -1,6 +1,7 @@
 const path = require('path')
 const http = require('http')
 const express = require('express')
+const cors = require('cors')
 const vhost = require('vhost')
 const serverReady = require('server-ready')
 const conf = require('../conf')
@@ -12,6 +13,7 @@ const TLDHost = require('./vhosts/tld')
 
 module.exports = group => {
   const app = express()
+  app.use(cors())
   const server = http.createServer(app)
 
   // Initialize routes

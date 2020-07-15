@@ -50,6 +50,7 @@
     "chalk": "^2.4.2",
     "chokidar": "^2.1.8",
     "connect-sse": "^1.2.0",
+    "cors": "^2.8.5",
     "exit-hook": "^1.1.1",
     "express": "^4.17.1",
     "get-port": "^3.2.0",
