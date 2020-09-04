@@ -1,6 +1,6 @@
 {
   "name": "hotel",
-  "version": "0.8.8-ka.4-hackathon",
+  "version": "0.8.8-ka.4",
   "description": "Local domains for everyone and more! ",
   "main": "lib",
   "bin": "lib/cli/bin.js",
