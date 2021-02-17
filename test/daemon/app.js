@@ -289,7 +289,7 @@ test.cb('GET http://localhost:2000/node2 should use the custom HOST to redirect'
     .get('/node2')
     .set('Host', 'localhost')
     // TODO: Fix this test for redirect
-    // .expect('location', /http:\/\/127.0.0.2:61234/)
+    .expect('location', /http:\/\/127.0.0.2:61234/)
     .expect(307, t.end)
 })
 
