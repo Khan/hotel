@@ -298,7 +298,9 @@ class Group extends EventEmitter {
     // Handle case where port is set
     // http://app.localhost:5000 should proxy to http://localhost:5000
     if (port) {
-      const target = `http://127.0.0.1:${port}`
+      const target = item.env.HOST
+        ? `http://${item.env.HOST}:${port}`
+        : `http://127.0.0.1:${port}`
 
       log(`Proxy - http://${req.headers.host} → ${target}`)
       return this.proxyWeb(req, res, target)
@@ -424,11 +426,11 @@ class Group extends EventEmitter {
       if (item) {
         if (port && port !== '80') {
           const { HOST } = item.env
-          util.log(`Connect - proxy socket to ${port}`)
+          log(`Connect - proxy socket to ${port}`)
           tcpProxy.proxy(socket, port, HOST || '127.0.0.1')
         } else if (item.start) {
           const { PORT, HOST } = item.env
-          util.log(`Connect - proxy socket to ${PORT}`)
+          log(`Connect - proxy socket to ${PORT}`)
           tcpProxy.proxy(socket, PORT, HOST || '127.0.0.1')
         } else {
           const { hostname, port } = url.parse(item.target)
