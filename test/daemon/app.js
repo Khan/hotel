@@ -38,6 +38,15 @@ test.before(() => {
     xfwd: true
   })
 
+  // Bind server to 127.0.0.2
+  servers.add('node index.js', {
+    name: 'node2',
+    port: 61234,
+    host: '127.0.0.2',
+    dir: path.join(__dirname, '../fixtures/app'),
+    out: '/tmp/logs/app.log'
+  })
+
   // Add server with subdomain
   servers.add('node index.js', {
     name: 'subdomain.node',
@@ -204,7 +213,7 @@ test.cb('GET /_/servers', t => {
     .get('/_/servers')
     .expect(200, (err, res) => {
       if (err) return t.end(err)
-      t.is(Object.keys(res.body).length, 10, 'got wrong number of servers')
+      t.is(Object.keys(res.body).length, 11, 'got wrong number of servers')
       t.end()
     })
 })
@@ -271,6 +280,17 @@ test.cb('GET http://localhost:2000/proxy should redirect to target', t => {
 })
 
 // TODO: Add tests for forward-by-proxy cases
+
+test.cb('GET http://localhost:2000/node2 should use the custom HOST to redirect', t => {
+  // temporary disable this test on AppVeyor
+  // Randomly fails
+  if (process.env.APPVEYOR) return t.end()
+  request(app)
+    .get('/node2')
+    .set('Host', 'localhost')
+    .expect('location', /http:\/\/127.0.0.2:61234/)
+    .expect(307, t.end)
+})
 
 //
 // Test daemon/app.js

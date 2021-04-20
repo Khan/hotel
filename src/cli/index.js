@@ -14,6 +14,10 @@ const addOptions = {
     describe: 'Set PORT environment variable',
     number: true
   },
+  host: {
+    alias: 'H',
+    describe: 'Set HOST environment variable'
+  },
   out: {
     alias: 'o',
     describe: 'Output file'
